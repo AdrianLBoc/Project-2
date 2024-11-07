@@ -4,40 +4,51 @@
 #include <utility>
 #include <regex>
 
-std::pair<int, int> ParseTimeRange(const std::string& timeRange) {
-  std::regex timeFormat(R"(\[(\d{2}):(\d{2}),\s*(\d{2}):(\d{2})\])");
+// Helper to parse time range in "HH:MM" format to minutes
+std::pair<int, int> ParseTimeRange(const std::string& time_range) {
+  std::regex time_format(R"(\[(\d{2}):(\d{2}),\s*(\d{2}):(\d{2})\])");
   std::smatch matches;
 
-  if (std::regex_match(timeRange, matches, timeFormat)) {
-    int startHour = std::stoi(matches[1].str());
-    int startMinute = std::stoi(matches[2].str());
-    int endHour = std::stoi(matches[3].str());
-    int endMinute = std::stoi(matches[4].str());
+  if (std::regex_match(time_range, matches, time_format)) {
+    int start_hour = std::stoi(matches[1].str());
+    int start_minute = std::stoi(matches[2].str());
+    int end_hour = std::stoi(matches[3].str());
+    int end_minute = std::stoi(matches[4].str());
 
-    int startTime = startHour * 60 + startMinute; // Convert to minutes
-    int endTime = endHour * 60 + endMinute;
+    int start_time = start_hour * 60 + start_minute; // Convert to minutes
+    int end_time = end_hour * 60 + end_minute;
 
-    return {startTime, endTime};
+    return {start_time, end_time};
   }
+  return {0, 0}; // Return 0 if the time range is invalid
 }
 
-std::vector<std::pair<int, int>> ParseSchedule(const std::string& scheduleInput) {
+// Helper to parse a person's schedule
+std::vector<std::pair<int, int>> ParseSchedule(const std::string& schedule_input) {
   std::vector<std::pair<int, int>> schedule;
-  std::regex rangeFormat(R"(\[\d{2}:\d{2},\s*\d{2}:\d{2}\])");
-  auto rangesBegin = std::sregex_iterator(scheduleInput.begin(), scheduleInput.end(), rangeFormat);
-  auto rangesEnd = std::sregex_iterator();
+  std::regex range_format(R"(\[\d{2}:\d{2},\s*\d{2}:\d{2}\])");
+  auto ranges_begin = std::sregex_iterator(schedule_input.begin(), schedule_input.end(), range_format);
+  auto ranges_end = std::sregex_iterator();
 
-  for (auto i = rangesBegin; i != rangesEnd; ++i) {
+  for (auto i = ranges_begin; i != ranges_end; ++i) {
       schedule.push_back(ParseTimeRange(i->str()));
   }
 
   return schedule;
 }
 
+// Helper to convert minutes to "HH:MM" format
+std::string MinutesToTime(int minutes) {
+    int hours = minutes / 60;
+    minutes %= 60;
+    return (hours < 10 ? "0" : "") + std::to_string(hours) + ":" + (minutes < 10 ? "0" : "") + std::to_string(minutes);
+}
+
 int main() {
   std::vector<std::vector<std::pair<int, int>>> schedules;
   std::vector<std::pair<int, int>> working_periods;
   
+  // Prompt user for input
   std::cout << "\nEnter the schedules of the people you would like to compare in the format '[HH:MM, HH:MM], ...'"
             << "\nExample: [06:00, 08:30], [12:00, 14:00]"
             << "\nThen, enter the working period in the same format."
@@ -45,19 +56,28 @@ int main() {
   
   int person_count = 0;
   while (true) {
-    person_count++;
+    person_count;
     
+    // Get schedule inputs
     std::string schedule_input;
-    std::cout << "Enter Person " << person_count << "'s schedule: ";
+    std::cout << "Enter Person " << person_count + 1 << "'s schedule: ";
     std::getline(std::cin, schedule_input);
     if (schedule_input.empty()) {break;}
     schedules.push_back(ParseSchedule(schedule_input));
     
+    // Get working period inputs
     std::string working_period_input;
-    std::cout << "Enter Person " << person_count << "'s working period: ";
+    std::cout << "Enter Person " << person_count + 1 << "'s working period: ";
     std::getline(std::cin, working_period_input);
     working_periods.push_back(ParseTimeRange(working_period_input));
   }
+
+  // Get meeting duration
+  int meeting_duration;
+  std::cout << "Enter the duration of the meeting in minutes: ";
+  std::cin >> meeting_duration;
+
+
   
 //   // Optional: Print parsed schedules and working periods
 //   for (int i = 0; i < schedules.size(); ++i) {
