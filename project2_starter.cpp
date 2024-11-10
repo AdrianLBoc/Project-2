@@ -44,6 +44,61 @@ std::string MinutesToTime(int minutes) {
     return (hours < 10 ? "0" : "") + std::to_string(hours) + ":" + (minutes < 10 ? "0" : "") + std::to_string(minutes);
 }
 
+// Merges overlapping intervals in a schedule
+std::vector<std::pair<int, int>> MergeIntervals(std::vector<std::pair<int, int>> intervals) {
+    if (intervals.empty()) return {};
+
+    std::sort(intervals.begin(), intervals.end());
+    std::vector<std::pair<int, int>> merged;
+    merged.push_back(intervals[0]);
+
+    for (size_t i = 1; i < intervals.size(); ++i) {
+        if (merged.back().second >= intervals[i].first) {
+            merged.back().second = std::max(merged.back().second, intervals[i].second);
+        } else {
+            merged.push_back(intervals[i]);
+        }
+    }
+    return merged;
+}
+
+// Finds available time slots for a meeting
+std::vector<std::pair<int, int>> FindAvailableSlots(
+    const std::vector<std::vector<std::pair<int, int>>>& schedules,
+    const std::vector<std::pair<int, int>>& working_periods,
+    int min_duration) {
+
+    // Merge all schedules into one
+    std::vector<std::pair<int, int>> all_intervals;
+    for (const auto& schedule : schedules) {
+        all_intervals.insert(all_intervals.end(), schedule.begin(), schedule.end());
+    }
+    all_intervals = MergeIntervals(all_intervals);
+
+    std::vector<std::pair<int, int>> available_slots;
+    int current_time = working_periods[0].first;  // Start from the earliest working period start
+
+    for (const auto& interval : all_intervals) {
+        if (current_time < interval.first) {
+            int gap = interval.first - current_time;
+            if (gap >= min_duration) {
+                available_slots.push_back({current_time, interval.first});
+            }
+        }
+        current_time = std::max(current_time, interval.second);
+    }
+
+    // Check if there is a final gap until the end of the last working period
+    if (current_time < working_periods[0].second) {
+        int gap = working_periods[0].second - current_time;
+        if (gap >= min_duration) {
+            available_slots.push_back({current_time, working_periods[0].second});
+        }
+    }
+
+    return available_slots;
+}
+
 int main() {
   std::vector<std::vector<std::pair<int, int>>> schedules;
   std::vector<std::pair<int, int>> working_periods;
@@ -56,8 +111,6 @@ int main() {
   
   int person_count = 0;
   while (true) {
-    person_count;
-    
     // Get schedule inputs
     std::string schedule_input;
     std::cout << "Enter Person " << person_count + 1 << "'s schedule: ";
@@ -70,6 +123,7 @@ int main() {
     std::cout << "Enter Person " << person_count + 1 << "'s working period: ";
     std::getline(std::cin, working_period_input);
     working_periods.push_back(ParseTimeRange(working_period_input));
+    ++person_count;
   }
 
   // Get meeting duration
@@ -77,19 +131,12 @@ int main() {
   std::cout << "Enter the duration of the meeting in minutes: ";
   std::cin >> meeting_duration;
 
+  // Find available slots and print them
+  std::vector<std::pair<int, int>> available_slots = FindAvailableSlots(schedules, working_periods, meeting_duration);
+  std::cout << "\nAvailable time slots:\n";
+  for (const auto& slot : available_slots) {
+    std::cout << "[" << MinutesToTime(slot.first) << ", " << MinutesToTime(slot.second) << "]\n";
+  }
 
-  
-//   // Optional: Print parsed schedules and working periods
-//   for (int i = 0; i < schedules.size(); ++i) {
-//     std::cout << "\nPerson " << i + 1 << "'s Schedule:\n";
-//     for (const auto& time_range : schedules[i]) {
-//       std::cout << "[" << time_range.first / 60 << ":" << (time_range.first % 60 < 10 ? "0" : "") << time_range.first % 60 
-//                 << ", " << time_range.second / 60 << ":" << (time_range.second % 60 < 10 ? "0" : "") << time_range.second % 60 
-//                 << "]\n";
-//     }
-//     std::cout << "Working Period: [" << working_periods[i].first / 60 << ":" << (working_periods[i].first % 60 < 10 ? "0" : "") 
-//               << working_periods[i].first % 60 << ", " << working_periods[i].second / 60 << ":" 
-//               << (working_periods[i].second % 60 < 10 ? "0" : "") << working_periods[i].second % 60 << "]\n";
-//     }
   return 0;
 }
