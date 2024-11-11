@@ -1,0 +1,86 @@
+---------- Test Case 1 ----------
+Enter person1_Schedule = [07:00, 08:30], [12:00, 13:00], [16:00, 18:00]
+person1_DailyAct = [09:00, 19:00]
+
+Enter person2_Schedule = [09:00, 10:30], [14:00, 15:00]
+person2_DailyAct = [08:00, 18:00]
+
+Enter duration_of_meeting = 30
+
+---------- Test Case 2 ----------
+Enter person1_Schedule = [08:00, 09:30], [11:00, 12:00], [13:00, 15:00]
+person1_DailyAct = [08:00, 17:00]
+
+Enter person2_Schedule = [09:30, 10:30], [14:00, 16:00]
+person2_DailyAct = [08:30, 17:30]
+
+Enter person3_Schedule = [08:15, 08:45], [10:45, 12:15]
+person3_DailyAct = [08:00, 17:00]
+
+Enter duration_of_meeting = 45
+
+---------- Test Case 3 ----------
+Enter person1_Schedule = [06:00, 08:00], [09:00, 10:00], [11:00, 13:00]
+person1_DailyAct = [06:00, 14:00]
+
+Enter duration_of_meeting = 15
+
+---------- Test Case 4 ----------
+Enter person1_Schedule = [07:00, 09:00], [12:00, 13:30], [15:00, 17:00]
+person1_DailyAct = [07:00, 18:00]
+
+Enter person2_Schedule = [08:30, 11:00], [13:00, 14:30], [16:30, 17:30]
+person2_DailyAct = [07:00, 19:00]
+
+Enter duration_of_meeting = 30
+
+---------- Test Case 5 ----------
+Enter person1_Schedule = [10:00, 11:00], [13:00, 14:00]
+person1_DailyAct = [09:00, 15:00]
+
+Enter duration_of_meeting = 60
+
+---------- Test Case 6 ----------
+Enter person1_Schedule = [05:30, 07:00], [08:00, 10:00], [12:00, 13:30], [15:00, 16:00]
+person1_DailyAct = [05:00, 17:00]
+
+Enter person2_Schedule = [09:00, 11:30], [14:00, 15:30]
+person2_DailyAct = [07:00, 16:00]
+
+Enter duration_of_meeting = 45
+
+---------- Test Case 7 ----------
+Enter person1_Schedule = [00:00, 23:59]  # Edge case: fully booked day
+person1_DailyAct = [00:00, 23:59]
+
+Enter duration_of_meeting = 15
+
+---------- Test Case 8 ----------
+Enter person1_Schedule = [06:00, 06:30], [08:00, 09:00], [13:00, 14:00], [17:00, 18:00]
+person1_DailyAct = [06:00, 19:00]
+
+Enter person2_Schedule = [07:00, 07:30], [09:30, 10:30], [15:00, 16:00]
+person2_DailyAct = [07:00, 18:30]
+
+Enter person3_Schedule = [08:30, 09:00], [10:00, 11:00], [14:30, 15:30]
+person3_DailyAct = [07:30, 17:30]
+
+Enter duration_of_meeting = 30
+
+---------- Test Case 9 ----------
+Enter person1_Schedule = [06:00, 07:00], [08:30, 09:30], [10:30, 11:30], [13:00, 15:00], [16:00, 17:00]
+person1_DailyAct = [06:00, 18:00]
+
+Enter person2_Schedule = [09:00, 09:30], [11:30, 12:30], [15:30, 16:30]
+person2_DailyAct = [06:30, 17:30]
+
+Enter duration_of_meeting = 60
+
+---------- Test Case 10 ----------
+Enter person1_Schedule = [07:00, 09:00], [11:00, 13:00], [15:00, 17:00]
+person1_DailyAct = [07:00, 18:00]
+
+Enter person2_Schedule = [09:30, 10:30], [14:00, 15:00], [17:30, 18:30]
+person2_DailyAct = [08:00, 19:00]
+
+Enter duration_of_meeting = 30
